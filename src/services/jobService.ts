@@ -38,3 +38,47 @@ export async function createJob(formData: {
   revalidatePath('/')
   return data
 }
+
+// IDを指定して求人を1件取得する関数
+export async function getJobById(id: string) {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('jobs')
+    .select('*')
+    .eq('id', id)
+    .single() // 1件だけ取得することを明示
+
+  if (error) {
+    console.error('Error fetching job:', error)
+    return null
+  }
+
+  return data
+}
+
+// 求人を削除する関数
+export async function deleteJob(id: string) {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('jobs')
+    .delete()
+    .eq('id', id)
+
+  if (error) throw new Error(error.message)
+
+  revalidatePath('/')
+}
+
+// 求人を更新する関数
+export async function updateJob(id: string, formData: any) {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('jobs')
+    .update(formData)
+    .eq('id', id)
+
+  if (error) throw new Error(error.message)
+
+  revalidatePath('/')
+  revalidatePath(`/jobs/${id}`)
+}
