@@ -1,4 +1,5 @@
 import { getJobs } from '@/services/jobService'
+import Link from 'next/link'
 
 export default async function Home() {
   const jobs = await getJobs()
@@ -6,9 +7,18 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-gray-50 py-10 px-5">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-          求人一覧（SkillConnect）
-        </h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">
+            求人一覧（SkillConnect）
+          </h1>
+          {/* 投稿ページへのボタン */}
+          <Link 
+            href="/jobs/new" 
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition shadow-sm"
+          >
+            + 求人を投稿
+          </Link>
+        </div>
 
         <div className="grid gap-6">
           {jobs.map((job) => (
