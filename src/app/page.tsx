@@ -1,12 +1,24 @@
 import { getJobs } from '@/services/jobService'
+import { createClient } from '@/lib/supabase/server' // 追加
+import { signOut } from '@/services/authService'   // 追加
 import Link from 'next/link'
 
 export default async function Home() {
   const jobs = await getJobs()
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
   return (
     <main className="min-h-screen bg-gray-50 py-10 px-5">
       <div className="max-w-4xl mx-auto">
+        {/* ヘッダー部分にユーザー情報とログアウトボタンを追加 */}
+        <div className="flex justify-between items-center mb-4 text-sm text-gray-600">
+          <span>ログイン中: {user?.email}</span>
+          <form action={signOut}>
+            <button className="hover:underline text-red-500">ログアウト</button>
+          </form>
+        </div>
+        
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
             求人一覧（SkillConnect）
